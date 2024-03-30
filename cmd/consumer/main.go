@@ -68,7 +68,7 @@ func main() {
 				fmt.Printf("Error en el proceso: %s\n", err)
 			}
 
-			if err := usecases.TranscodeVideo(videoUrl, outputPath, videoInfo.Video.Width, videoInfo.Video.Height); err != nil {
+			if err := usecase.TranscodeVideo(videoUrl, outputPath, videoInfo.Video.Width, videoInfo.Video.Height); err != nil {
 				fmt.Printf("\nError durante los procesos: %v\n", err)
 			}
 		}

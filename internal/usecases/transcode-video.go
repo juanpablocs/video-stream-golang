@@ -10,29 +10,33 @@ import (
 
 	"github.com/juanpablocs/ffmpeg-golang/internal/models"
 	"github.com/juanpablocs/ffmpeg-golang/internal/utils"
+	pkgVideo "github.com/juanpablocs/ffmpeg-golang/pkg/video"
 )
 
-func TranscodeVideo(originalInputPath, outputPath string, width, height int) error {
+func (u Usecase) TranscodeVideo(originalInputPath, outputPath string, width, height int) error {
 	currentInputPath := originalInputPath // Empieza con el path original
 
 	masterPlaylistPath := filepath.Join(outputPath, "video_master.m3u8")
 	var variantPlaylistEntries []string
 
+	nameSplits := strings.Split(outputPath, "/")
+	ID := nameSplits[len(nameSplits)-1]
+
 	applicableResolutions := utils.FilterResolutions(width, height)
 
 	for i, res := range applicableResolutions {
-		fmt.Printf("\nIniciando transcodificación a %s...\n", res.Label)
-
 		resOutputMP4 := fmt.Sprintf("%s/video_%s.mp4", outputPath, res.Label)
 		resOutputHLS := fmt.Sprintf("%s/video_%s.m3u8", outputPath, res.Label)
 
 		// Crear las carpetas necesarias
 		if err := os.MkdirAll(outputPath, 0755); err != nil {
+			u.VideoStatus(ID, models.StatusError) //TODO: add log error to database
 			return fmt.Errorf("error al crear las carpetas necesarias: %w", err)
 		}
 
 		// Ejecutar la transcodificación para la resolución actual
 		if err := executeAndMonitor(currentInputPath, resOutputMP4, resOutputHLS, res); err != nil {
+			u.VideoStatus(ID, models.StatusError) //TODO: add log error to database
 			return err
 		}
 
@@ -46,14 +50,29 @@ func TranscodeVideo(originalInputPath, outputPath string, width, height int) err
 		// Agregar entrada de playlist de variante al archivo maestro
 		bandwidth := calculateBandwidth(res)
 		variantPlaylistEntries = append(variantPlaylistEntries, fmt.Sprintf("#EXT-X-STREAM-INF:BANDWIDTH=%d,CODECS=\"avc1.42e01e,mp4a.40.2\",RESOLUTION=%dx%d\n%s", bandwidth, res.Width, res.Height, fmt.Sprintf("video_%s.m3u8", res.Label)))
+
+		// get video info metadata
+		metadata := &pkgVideo.Metadata{Video: pkgVideo.Video{Filename: ID}}
+		videoInfo, errVideoInfo := pkgVideo.VideoInfo(resOutputMP4, metadata)
+		if errVideoInfo != nil {
+			u.VideoStatus(ID, models.StatusError) //TODO: add log error to database
+			return fmt.Errorf("error obteniendo info del video: %w", errVideoInfo)
+		}
+		// insert the transcoded video into the database
+		if errInsert := u.InsertVideoTranscoded(ID, resOutputMP4, resOutputHLS, videoInfo); errInsert != nil {
+			u.VideoStatus(ID, models.StatusError) //TODO: add log error to database
+			return fmt.Errorf("error al insertar el video transcodificado: %w", errInsert)
+		}
 	}
 
 	// Crear el archivo maestro M3U8 que incluye todas las variantes
 	masterContent := "#EXTM3U\n" + strings.Join(variantPlaylistEntries, "\n")
 	if err := os.WriteFile(masterPlaylistPath, []byte(masterContent), 0644); err != nil {
+		u.VideoStatus(ID, models.StatusError) //TODO: add log error to database
 		return fmt.Errorf("error al escribir el archivo maestro M3U8: %w", err)
 	}
 
+	u.VideoStatus(ID, models.StatusFinished)
 	fmt.Println("\nProcesos completados con éxito.")
 	return nil
 }

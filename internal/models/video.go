@@ -62,6 +62,7 @@ type VideoUpload struct {
 // VideoUploadTranscoded representa un archivo de video transcodificado.
 type VideoUploadTranscoded struct {
 	ID               primitive.ObjectID `bson:"_id,omitempty" json:"id,omitempty"`
+	VideoID          primitive.ObjectID `bson:"videoId" json:"videoId"`             // Referencia al Video
 	VideoUploadID    primitive.ObjectID `bson:"videoUploadId" json:"videoUploadId"` // Referencia al VideoUpload original
 	FileSize         int64              `bson:"fileSize" json:"fileSize"`           // En bytes
 	UrlMP4           string             `bson:"urlMP4" json:"urlMP4"`
@@ -73,7 +74,7 @@ type VideoUploadTranscoded struct {
 	VideoAspectRatio string             `bson:"videoAspectRatio" json:"videoAspectRatio"`
 	AudioCodec       string             `bson:"audioCodec" json:"audioCodec"`
 	AudioChannels    int                `bson:"audioChannels" json:"audioChannels"`
-	AudioSampleRate  int                `bson:"audioSampleRate" json:"audioSampleRate"` // URL del video transcodificado
+	AudioSampleRate  int                `bson:"audioSampleRate" json:"audioSampleRate"`
 }
 
 type VideoRequest struct {
