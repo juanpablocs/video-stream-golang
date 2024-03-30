@@ -10,6 +10,7 @@ import (
 	"github.com/juanpablocs/ffmpeg-golang/internal/dependencies"
 	"github.com/juanpablocs/ffmpeg-golang/internal/handlers"
 	"github.com/juanpablocs/ffmpeg-golang/internal/routes"
+	"github.com/juanpablocs/ffmpeg-golang/internal/usecases"
 )
 
 func main() {
@@ -28,10 +29,12 @@ func main() {
 	// Create a new MongoDB connection.
 	mongoClient := dependencies.ConnectDB()
 
+	usecase := usecases.NewUsecase(mongoClient.Database(os.Getenv("MONGODB_DATABASE")))
 	handler := handlers.NewHandler(
 		// TODO: Change to repository or usecase
 		mongoClient.Database(os.Getenv("MONGODB_DATABASE")),
 		channel,
+		usecase,
 	)
 	// Create a new Fiber instance.
 	app := fiber.New()
