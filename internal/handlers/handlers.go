@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"github.com/juanpablocs/ffmpeg-golang/internal/usecases"
+	"github.com/juanpablocs/video-stream-golang/internal/usecases"
 	"github.com/streadway/amqp"
 	"go.mongodb.org/mongo-driver/mongo"
 )

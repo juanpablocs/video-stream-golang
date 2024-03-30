@@ -4,7 +4,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/juanpablocs/ffmpeg-golang/internal/models"
+	"github.com/juanpablocs/video-stream-golang/internal/models"
 )
 
 func TestFilterResolutions(t *testing.T) {

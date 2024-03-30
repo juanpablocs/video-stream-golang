@@ -8,9 +8,9 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/juanpablocs/ffmpeg-golang/internal/models"
-	"github.com/juanpablocs/ffmpeg-golang/internal/utils"
-	pkgVideo "github.com/juanpablocs/ffmpeg-golang/pkg/video"
+	"github.com/juanpablocs/video-stream-golang/internal/models"
+	"github.com/juanpablocs/video-stream-golang/internal/utils"
+	pkgVideo "github.com/juanpablocs/video-stream-golang/pkg/video"
 )
 
 func (u Usecase) TranscodeVideo(originalInputPath, outputPath string, width, height int) error {

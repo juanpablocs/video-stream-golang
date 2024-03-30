@@ -1,6 +1,6 @@
 package utils
 
-import "github.com/juanpablocs/ffmpeg-golang/internal/models"
+import "github.com/juanpablocs/video-stream-golang/internal/models"
 
 func FilterResolutions(videoWidth, videoHeight int) []models.Resolution {
 	resolutions := []models.Resolution{

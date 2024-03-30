@@ -2,7 +2,7 @@ package routes
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"github.com/juanpablocs/ffmpeg-golang/internal/handlers"
+	"github.com/juanpablocs/video-stream-golang/internal/handlers"
 )
 
 func AddRoutes(app *fiber.App, handler *handlers.Handler) {

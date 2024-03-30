@@ -1,4 +1,4 @@
-module github.com/juanpablocs/ffmpeg-golang
+module github.com/juanpablocs/video-stream-golang
 
 go 1.20
 

@@ -5,8 +5,8 @@ import (
 	"time"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/juanpablocs/ffmpeg-golang/internal/dependencies"
-	"github.com/juanpablocs/ffmpeg-golang/internal/models"
+	"github.com/juanpablocs/video-stream-golang/internal/dependencies"
+	"github.com/juanpablocs/video-stream-golang/internal/models"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 

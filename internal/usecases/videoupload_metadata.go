@@ -4,8 +4,8 @@ import (
 	"context"
 	"time"
 
-	"github.com/juanpablocs/ffmpeg-golang/internal/models"
-	pkgVideo "github.com/juanpablocs/ffmpeg-golang/pkg/video"
+	"github.com/juanpablocs/video-stream-golang/internal/models"
+	pkgVideo "github.com/juanpablocs/video-stream-golang/pkg/video"
 	"go.mongodb.org/mongo-driver/bson"
 )
 

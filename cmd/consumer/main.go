@@ -5,9 +5,9 @@ import (
 	"log"
 	"os"
 
-	"github.com/juanpablocs/ffmpeg-golang/internal/dependencies"
-	"github.com/juanpablocs/ffmpeg-golang/internal/usecases"
-	pkgVideo "github.com/juanpablocs/ffmpeg-golang/pkg/video"
+	"github.com/juanpablocs/video-stream-golang/internal/dependencies"
+	"github.com/juanpablocs/video-stream-golang/internal/usecases"
+	pkgVideo "github.com/juanpablocs/video-stream-golang/pkg/video"
 )
 
 func main() {

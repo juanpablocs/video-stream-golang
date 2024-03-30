@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 
 	"github.com/fogleman/gg"
-	"github.com/juanpablocs/ffmpeg-golang/pkg/util"
+	"github.com/juanpablocs/video-stream-golang/pkg/util"
 )
 
 const (

@@ -7,10 +7,10 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/logger"
-	"github.com/juanpablocs/ffmpeg-golang/internal/dependencies"
-	"github.com/juanpablocs/ffmpeg-golang/internal/handlers"
-	"github.com/juanpablocs/ffmpeg-golang/internal/routes"
-	"github.com/juanpablocs/ffmpeg-golang/internal/usecases"
+	"github.com/juanpablocs/video-stream-golang/internal/dependencies"
+	"github.com/juanpablocs/video-stream-golang/internal/handlers"
+	"github.com/juanpablocs/video-stream-golang/internal/routes"
+	"github.com/juanpablocs/video-stream-golang/internal/usecases"
 )
 
 func main() {

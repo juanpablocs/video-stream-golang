@@ -8,7 +8,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/juanpablocs/ffmpeg-golang/internal/models"
+	"github.com/juanpablocs/video-stream-golang/internal/models"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
