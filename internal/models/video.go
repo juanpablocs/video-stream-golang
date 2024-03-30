@@ -17,6 +17,7 @@ type Video struct {
 	Status      VideoStatus        `bson:"status" json:"status"`
 	CreatedAt   time.Time          `bson:"createdAt" json:"createdAt"`
 	UpdatedAt   time.Time          `bson:"updatedAt" json:"updatedAt"`
+	VideoUpload VideoUpload        `bson:"videoUpload,omitempty" json:"videoUpload,omitempty"`
 }
 
 type VideoStatus string

@@ -8,9 +8,9 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-func (h Usecase) VideoUploadId(id string) (*models.VideoUpload, error) {
+func (h Usecase) VideoUploadId(videoId string) (*models.VideoUpload, error) {
 	// Convertir el string id a un ObjectID
-	objId, _ := primitive.ObjectIDFromHex(id)
+	objId, _ := primitive.ObjectIDFromHex(videoId)
 
 	var videoUpload *models.VideoUpload
 	uploadCollection := h.db.Collection("videoUploads")

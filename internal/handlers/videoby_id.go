@@ -5,11 +5,16 @@ import (
 )
 
 func (h Handler) VideoByID(c *fiber.Ctx) error {
-	video, err := h.usecase.VideoId(c.Params("id"))
+	videoID := c.Params("id")
+	video, err := h.usecase.VideoId(videoID)
 	if err != nil {
-		return c.Status(500).JSON(fiber.Map{
+		return c.Status(400).JSON(fiber.Map{
 			"error": err.Error(),
 		})
 	}
+	// TODO: controlled with a flag or parameter
+	videoUpload, _ := h.usecase.VideoUploadId(videoID)
+	video.VideoUpload = *videoUpload
+
 	return c.JSON(video)
 }
