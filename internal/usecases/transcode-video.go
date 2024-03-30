@@ -4,41 +4,25 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
-	"path"
-	"strings"
 	"sync"
-	"time"
+
+	"github.com/juanpablocs/ffmpeg-golang/internal/models"
+	"github.com/juanpablocs/ffmpeg-golang/internal/utils"
 )
 
-type Resolution struct {
-	Width  int
-	Height int
-	Label  string // Como "720p", "480p", etc.
-}
-
-func TranscodeVideo(originalInputPath, outputPath string, totalDuration time.Duration) error {
+func TranscodeVideo(originalInputPath, outputPath string, width, height int) error {
 	currentInputPath := originalInputPath // Empieza con el path original
 
-	resolutions := []Resolution{
-		{Width: 1280, Height: 720, Label: "720p"},
-		{Width: 854, Height: 480, Label: "480p"},
-		{Width: 640, Height: 360, Label: "360p"},
-		{Width: 426, Height: 240, Label: "240p"},
-	}
+	applicableResolutions := utils.FilterResolutions(width, height)
 
-	for i, res := range resolutions {
+	for i, res := range applicableResolutions {
 		fmt.Printf("\nIniciando transcodificación a %s...\n", res.Label)
 
-		// Definir los nombres de los archivos de salida basados en la resolución actual
-		basePath := path.Dir(outputPath)
-
-		parts := strings.Split(outputPath, "/")
-		name := parts[len(parts)-1]
-		resOutputMP4 := fmt.Sprintf("%s/%s_%s.mp4", basePath, name, res.Label)
-		resOutputHLS := fmt.Sprintf("%s/%s_%s.m3u8", basePath, name, res.Label)
+		resOutputMP4 := fmt.Sprintf("%s/video_%s.mp4", outputPath, res.Label)
+		resOutputHLS := fmt.Sprintf("%s/video_%s.m3u8", outputPath, res.Label)
 
 		// Crear las carpetas necesarias
-		if err := os.MkdirAll(basePath, 0755); err != nil {
+		if err := os.MkdirAll(outputPath, 0755); err != nil {
 			return fmt.Errorf("error al crear las carpetas necesarias: %w", err)
 		}
 
@@ -60,11 +44,11 @@ func TranscodeVideo(originalInputPath, outputPath string, totalDuration time.Dur
 	return nil
 }
 
-func executeAndMonitor(inputPath, outputPathMP4, outputPathHLS string, res Resolution) error {
+func executeAndMonitor(inputPath, outputPathMP4, outputPathHLS string, res models.Resolution) error {
 	var wg sync.WaitGroup
 	wg.Add(1)
 
-	// Transcodificar a MP4
+	// Generar MP4
 	fmt.Printf("Transcodificando a MP4: %s\n", res.Label)
 	cmdMP4 := exec.Command("ffmpeg", "-i", inputPath,
 		"-vf", fmt.Sprintf("scale=%d:%d", res.Width, res.Height), "-c:v", "libx264",
