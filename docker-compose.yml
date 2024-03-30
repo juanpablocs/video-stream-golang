@@ -1,0 +1,55 @@
+version: "3.9"
+volumes:
+  videos:
+services:
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: video-stream-rabbitmq
+    restart: always
+    ports:
+      - 5672:5672
+      - 15672:15672
+  db:
+    image: mongo
+    container_name: video-stream-mongo
+    restart: always
+    ports:
+      - 27017:27017
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=1234
+  consumer:
+    build: 
+      context: .
+      dockerfile: Dockerfile.consumer
+    container_name: video-stream-consumer
+    environment:
+      MONGODB_URI: mongodb://root:1234@db:27017
+      MONGODB_DATABASE: video-stream
+      AMQP_SERVER_URL: amqp://guest:guest@rabbitmq:5672
+      GO_ENV: production
+    volumes:
+      - videos:/go/src/app2/videos
+    restart: unless-stopped
+    depends_on:
+      - db
+      - rabbitmq
+      - appmain
+  appmain:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    container_name: video-stream-api
+    ports:
+      - 3000:3000
+    environment:
+      MONGODB_URI: mongodb://root:1234@db:27017
+      MONGODB_DATABASE: video-stream
+      AMQP_SERVER_URL: amqp://guest:guest@rabbitmq:5672
+      GO_ENV: production
+    volumes:
+      - videos:/go/src/app/videos
+    restart: unless-stopped
+    depends_on:
+      - db
+      - rabbitmq

@@ -1,0 +1,15 @@
+FROM golang:1.22.0
+
+# Install ffmpeg
+COPY --from=mwader/static-ffmpeg:6.1.1 /ffmpeg /usr/local/bin/
+COPY --from=mwader/static-ffmpeg:6.1.1 /ffprobe /usr/local/bin/
+
+WORKDIR /go/src/app2
+COPY ./ .
+
+RUN mkdir -p /go/src/app2/videos
+
+RUN go get -d -v ./...
+RUN go build -o consumer cmd/consumer/main.go
+
+CMD ["./consumer"]
