@@ -43,13 +43,13 @@ func (h *Usecase) CreateThumbnails(videoUrl, videoID, videoDir string, duration 
 		thumbnailSmall := models.Thumbnail{
 			Size:     "small",
 			Position: positions[pos],
-			Path:     strings.Replace(smallPath, "video/", "/bucket/", 1),
+			Path:     strings.Replace(smallPath, "videos/", "/bucket/", 1),
 			Default:  pos == 1,
 		}
 		thumbnailLarge := models.Thumbnail{
 			Size:     "large",
 			Position: positions[pos],
-			Path:     strings.Replace(largePath, "video/", "/bucket/", 1),
+			Path:     strings.Replace(largePath, "videos/", "/bucket/", 1),
 			Default:  pos == 1,
 		}
 
@@ -68,6 +68,7 @@ func (h *Usecase) CreateThumbnails(videoUrl, videoID, videoDir string, duration 
 	update := bson.M{
 		"$set": bson.M{
 			"thumbnails": thumbnails,
+			"status":     models.StatusConverting,
 			"updatedAt":  time.Now(),
 		},
 	}
