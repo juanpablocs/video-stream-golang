@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"path/filepath"
+	"strings"
 	"sync"
 
 	"github.com/juanpablocs/ffmpeg-golang/internal/models"
@@ -12,6 +14,9 @@ import (
 
 func TranscodeVideo(originalInputPath, outputPath string, width, height int) error {
 	currentInputPath := originalInputPath // Empieza con el path original
+
+	masterPlaylistPath := filepath.Join(outputPath, "video_master.m3u8")
+	var variantPlaylistEntries []string
 
 	applicableResolutions := utils.FilterResolutions(width, height)
 
@@ -38,6 +43,15 @@ func TranscodeVideo(originalInputPath, outputPath string, width, height int) err
 		if i == 0 {
 			currentInputPath = originalInputPath
 		}
+		// Agregar entrada de playlist de variante al archivo maestro
+		bandwidth := calculateBandwidth(res)
+		variantPlaylistEntries = append(variantPlaylistEntries, fmt.Sprintf("#EXT-X-STREAM-INF:BANDWIDTH=%d,CODECS=\"avc1.42e01e,mp4a.40.2\",RESOLUTION=%dx%d\n%s", bandwidth, res.Width, res.Height, fmt.Sprintf("video_%s.m3u8", res.Label)))
+	}
+
+	// Crear el archivo maestro M3U8 que incluye todas las variantes
+	masterContent := "#EXTM3U\n" + strings.Join(variantPlaylistEntries, "\n")
+	if err := os.WriteFile(masterPlaylistPath, []byte(masterContent), 0644); err != nil {
+		return fmt.Errorf("error al escribir el archivo maestro M3U8: %w", err)
 	}
 
 	fmt.Println("\nProcesos completados con éxito.")
@@ -86,4 +100,9 @@ func executeAndMonitor(inputPath, outputPathMP4, outputPathHLS string, res model
 	}
 
 	return nil
+}
+
+func calculateBandwidth(res models.Resolution) int {
+	// ancho de banda aproximado basado en la resolución y otros factores
+	return res.Width * res.Height * 5
 }
