@@ -16,9 +16,10 @@ const (
 	thumbWidth = 200 // Ancho fijo de los thumbnails
 )
 
+// TODO: refactor algorithm for calculating the interval and video duration
 func CreateSpritesAndVTT(videoPath string, outputDir string, videoDuration float64) error {
 	spritesDir := filepath.Join(outputDir, "sprites")
-	secondInterval := util.CalculeInterval(videoDuration)
+	secondInterval := util.CalculeInterval(videoDuration / 60)
 	if err := os.MkdirAll(spritesDir, 0755); err != nil {
 		return fmt.Errorf("creating sprites directory: %w", err)
 	}

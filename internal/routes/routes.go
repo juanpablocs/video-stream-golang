@@ -7,9 +7,7 @@ import (
 )
 
 func AddRoutes(app *fiber.App, handler *handlers.Handler) {
-	app.Static("/bucket", "./videos", fiber.Static{
-		Compress: true,
-	})
+	app.Static("/bucket", "./videos")
 	app.Get("/videos", handler.ListVideos)
 	app.Get("/videos/:id", handler.VideoByID)
 	app.Post("/videos", handler.CreateVideo)

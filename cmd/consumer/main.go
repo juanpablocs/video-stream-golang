@@ -64,7 +64,7 @@ func main() {
 
 			usecase.CreateThumbnails(videoUrl, ID, outputPath, videoInfo.Video.Duration)
 
-			if err := usecases.CreateSpritesAndVTT(videoUrl, outputPath, videoInfo.Video.Duration/60); err != nil {
+			if err := usecases.CreateSpritesAndVTT(videoUrl, outputPath, videoInfo.Video.Duration); err != nil {
 				fmt.Printf("Error en el proceso: %s\n", err)
 			}
 
