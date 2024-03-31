@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/juanpablocs/video-stream-golang/internal/models"
+	"github.com/juanpablocs/video-stream-golang/internal/utils"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -39,12 +40,7 @@ func (u Usecase) VideoList(page, pageSize int64) (*models.VideoListResponse, err
 		createdAt := video.CreatedAt.Format(time.RFC3339)
 
 		// Construir el mapa de thumbnails
-		thumbnailMap := make(map[string]string)
-		for _, thumbnail := range video.Thumbnails {
-			if thumbnail.Default {
-				thumbnailMap[thumbnail.Size] = thumbnail.Path
-			}
-		}
+		thumbnailMap := utils.ThumbnailMap(video.Thumbnails)
 
 		// Agregar el video convertido a la lista de PublicVideo
 		publicVideos = append(publicVideos, models.PublicVideo{

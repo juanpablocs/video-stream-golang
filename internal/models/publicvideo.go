@@ -9,6 +9,8 @@ type PublicVideo struct {
 	VttTrack    string            `json:"vttTrack"`
 	Status      VideoStatus       `json:"status"`
 	CreatedAt   string            `json:"createdAt"`
+	Sources     []string          `json:"sources,omitempty"`
+	Playlist    string            `json:"playlist,omitempty"`
 }
 
 type VideoListResponse struct {
